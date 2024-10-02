@@ -29,7 +29,7 @@ func NewConsumer(server string, topic string, metrics Metrics) (*KafkaConsumer, 
 	return &KafkaConsumer{consumer: reader, m: metrics}, nil
 }
 
-func (c *KafkaConsumer) RegisterHandler(ctx context.Context, handleFunc func(context.Context, interface{})) {
+func (c *KafkaConsumer) RegisterHandler(ctx context.Context, handleFunc func(context.Context, []byte)) {
 	go func() {
 		for {
 			msg, err := c.consumer.ReadMessage(ctx)
@@ -39,7 +39,7 @@ func (c *KafkaConsumer) RegisterHandler(ctx context.Context, handleFunc func(con
 				continue
 			}
 			c.m.Increment("new_friend.ok")
-			handleFunc(ctx, msg)
+			handleFunc(ctx, msg.Value)
 		}
 	}()
 }
