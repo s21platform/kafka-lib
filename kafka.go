@@ -8,11 +8,11 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-type Kafka struct {
+type KafkaProducer struct {
 	producer *kafka.Writer
 }
 
-func NewProducer(serverAddr string, topic string) *Kafka {
+func NewProducer(serverAddr string, topic string) *KafkaProducer {
 	producer := &kafka.Writer{
 		Addr:         kafka.TCP(serverAddr),
 		Topic:        topic,
@@ -20,10 +20,10 @@ func NewProducer(serverAddr string, topic string) *Kafka {
 		RequiredAcks: kafka.RequireAll,
 	}
 
-	return &Kafka{producer: producer}
+	return &KafkaProducer{producer: producer}
 }
 
-func (k *Kafka) ProduceMessage(message interface{}) error {
+func (k *KafkaProducer) ProduceMessage(message interface{}) error {
 	bMessage, err := json.Marshal(message)
 	if err != nil {
 		return fmt.Errorf("failed to marshal message: %v", err)
