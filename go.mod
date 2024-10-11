@@ -1,6 +1,6 @@
 module github.com/s21platform/kafka-lib
 
-go 1.22.7
+go 1.22.8
 
 require (
 	github.com/klauspost/compress v1.15.9 // indirect

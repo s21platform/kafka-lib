@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/segmentio/kafka-go"
@@ -30,7 +31,8 @@ func NewConsumer(server string, topic string, metrics Metrics) (*KafkaConsumer, 
 		Topic:   topic,
 		GroupID: "123",
 	})
-	return &KafkaConsumer{consumer: reader, m: metrics, topic: topic}, nil
+	modifyTopic := strings.ReplaceAll(topic, ".", "_")
+	return &KafkaConsumer{consumer: reader, m: metrics, topic: modifyTopic}, nil
 }
 
 func (c *KafkaConsumer) RegisterHandler(ctx context.Context, handleFunc func(context.Context, []byte)) {
