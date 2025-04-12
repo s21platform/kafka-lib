@@ -60,7 +60,7 @@ func NewProducer(config ProducerConfig) *KafkaProducer {
 // Принимает контекст для возможности отмены операции и таймаутов
 // Параметр T определяет тип отправляемого сообщения
 // Параметр K определяет тип ключа сообщения
-func ProduceMessage[T any, K any](k *KafkaProducer, ctx context.Context, message T, key K) error {
+func (k *KafkaProducer) ProduceMessage(ctx context.Context, message any, key any) error {
 	bMessage, err := json.Marshal(message)
 	if err != nil {
 		return fmt.Errorf("failed to marshal message: %v", err)
