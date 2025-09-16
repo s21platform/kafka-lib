@@ -28,9 +28,9 @@ type Metrics interface {
 // ConsumerConfig содержит настройки для создания consumer'а
 type ConsumerConfig struct {
 	// Host адрес Kafka сервера
-	Host string
+	Host []string
 	// Port порт Kafka сервера
-	Port string
+	Port []string
 	// Topic имя топика
 	Topic string
 	// GroupID идентификатор группы потребителей
@@ -46,7 +46,7 @@ type ConsumerConfig struct {
 }
 
 // DefaultConsumerConfig возвращает конфигурацию по умолчанию
-func DefaultConsumerConfig(host, port, topic, groupID string) ConsumerConfig {
+func DefaultConsumerConfig(host, port []string, topic, groupID string) ConsumerConfig {
 	if groupID == "" {
 		groupID = topic + "_group"
 	}
@@ -73,7 +73,11 @@ func NewConsumer(config ConsumerConfig, metrics Metrics) (*KafkaConsumer, error)
 	if metrics == nil {
 		return nil, ErrNoMetrics
 	}
-	broker := []string{config.Host + ":" + config.Port}
+	var broker []string
+	for i, host := range config.Host {
+		port := config.Port[i]
+		broker = append(broker, host+":"+port)
+	}
 	reader := kafka.NewReader(kafka.ReaderConfig{
 		Brokers: broker,
 		Topic:   config.Topic,
